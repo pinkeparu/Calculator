@@ -20,10 +20,10 @@
         <TextBox Name="txtInput2" HorizontalAlignment="Left" Height="23" Margin="121,89,0,0" TextWrapping="Wrap" Text="{Binding txtInput2, Source={StaticResource objViewModel}, UpdateSourceTrigger=PropertyChanged,  ValidatesOnDataErrors=True}" VerticalAlignment="Top" Width="120"/>
         <Label Content="Result" HorizontalAlignment="Left" Margin="53,132,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="121,137,0,0" TextWrapping="Wrap" Text="{Binding Result, Source={StaticResource objViewModel}}" VerticalAlignment="Top"/>
-        <Button x:Name="add" Content="Add" HorizontalAlignment="Left" Margin="68,179,0,0" VerticalAlignment="Top" Width="75" Command="{Binding cmd, Mode=OneWay, Source={StaticResource objViewModel}}" CommandParameter="{Binding Content, ElementName=add}"/>
-        <Button x:Name="sub" Content="Subtract" HorizontalAlignment="Left" Margin="166,179,0,0" VerticalAlignment="Top" Width="75" Command="{Binding cmd, Mode=OneWay, Source={StaticResource objViewModel}}" CommandParameter="{Binding Content, ElementName=sub}"/>
-        <Button x:Name="mult" Content="Multiply" HorizontalAlignment="Left" Margin="263,179,0,0" VerticalAlignment="Top" Width="75" Command="{Binding cmd, Mode=OneWay, Source={StaticResource objViewModel}}" CommandParameter="{Binding Content, ElementName=mult}"/>
-        <Button x:Name="div" Content="Divide" HorizontalAlignment="Left" Margin="354,179,0,0" VerticalAlignment="Top" Width="75" Command="{Binding cmd, Mode=OneWay, Source={StaticResource objViewModel}}" CommandParameter="{Binding Content, ElementName=div}"/>
+        <Button x:Name="add" Content="Add" HorizontalAlignment="Left" Margin="68,179,0,0" VerticalAlignment="Top" Width="75" Command="{Binding AddCommand, Mode=OneWay, Source={StaticResource objViewModel}}"/>
+        <Button x:Name="sub" Content="Subtract" HorizontalAlignment="Left" Margin="166,179,0,0" VerticalAlignment="Top" Width="75" Command="{Binding SubtractCommand, Mode=OneWay, Source={StaticResource objViewModel}}" />
+        <Button x:Name="mult" Content="Multiply" HorizontalAlignment="Left" Margin="263,179,0,0" VerticalAlignment="Top" Width="75" Command="{Binding MultiplyCommand, Mode=OneWay, Source={StaticResource objViewModel}}" />
+        <Button x:Name="div" Content="Divide" HorizontalAlignment="Left" Margin="354,179,0,0" VerticalAlignment="Top" Width="75" Command="{Binding DivideCommand, Mode=OneWay, Source={StaticResource objViewModel}}" />
         
         <ContentPresenter 
       Content="{Binding ElementName=txtInput1, Path=(Validation.Errors).CurrentItem}"

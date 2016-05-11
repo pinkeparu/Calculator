@@ -4,23 +4,50 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CalcProgram.ViewModel
 {
-    class OperationsViewModel : NotifyClass, IDataErrorInfo
+    public class OperationsViewModel : NotifyClass, IDataErrorInfo
     {
-        OperationModel objOperationModel = new OperationModel();
-        OperationCommand objOperationCommand;// = new OperationCommand();
+        OperationModel objOperationModel = new OperationModel();        
 
         public OperationsViewModel()
         {
-            objOperationCommand = new OperationCommand(Calculate, isValid);
+            AddCommand = new OperationCommand(Add, isValid);
+            SubtractCommand = new OperationCommand(Subtract, isValid);
+            MultiplyCommand = new OperationCommand(Multiply, isValid);
+            DivideCommand = new OperationCommand(Divide, isValid);           
         }
+
+        public void Add()
+        {
+            objOperationModel.Add();
+            PropertyChangedMethod("Result");
+        }
+
+        public void Subtract()
+        {
+            objOperationModel.Subtract();
+            PropertyChangedMethod("Result");
+        }
+
+        public void Multiply()
+        {
+            objOperationModel.Multiply();
+            PropertyChangedMethod("Result");
+        }
+
+        public void Divide()
+        {
+            objOperationModel.Divide();
+            PropertyChangedMethod("Result");
+        }     
 
         bool isValid()
         {
-            int Tempresult=0;
+            int Tempresult = 0;
             if (!IsValidNumber(input1, out Tempresult))
             {
                 return false;
@@ -33,21 +60,28 @@ namespace CalcProgram.ViewModel
             return true;
         }
 
-        bool validateInput(string value)
+        public OperationCommand AddCommand
         {
-            int result;
-
-            if (int.TryParse(value.ToString(), out result))
-            {
-                return true;
-            }
-
-            return false;
+            get;
+            set;
         }
 
-        public ICommand cmd
+        public OperationCommand SubtractCommand
         {
-            get { return objOperationCommand; }
+            get;
+            set;
+        }
+
+        public OperationCommand MultiplyCommand
+        {
+            get;
+            set;
+        }
+
+        public OperationCommand DivideCommand
+        {
+            get;
+            set;
         }
 
         string input1;
@@ -86,28 +120,7 @@ namespace CalcProgram.ViewModel
             {
                 objOperationModel.Result = Convert.ToDouble(value);
             }
-        }
-
-        public void Calculate(object obj)
-        {
-            switch (obj.ToString())
-            {
-                case "Add":
-                    objOperationModel.Add();
-                    break;
-                case "Subtract":
-                    objOperationModel.Subtract();
-                    break;
-                case "Multiply":
-                    objOperationModel.Multiply();
-                    break;
-                case "Divide":
-                    objOperationModel.Divide();
-                    break;
-            }
-
-            PropertyChangedMethod("Result");
-        }        
+        }       
 
         #region DataErrorInfo Member
 
@@ -123,10 +136,10 @@ namespace CalcProgram.ViewModel
                 int result;
                 if (propertyName == "txtInput1")
                 {
-                    objOperationCommand.Refresh();
+                   // objOperationCommand.Refresh();
                     if (!IsValidNumber(input1, out result))
                     {
-                        objOperationModel.FirstNumber = 0;                       
+                        objOperationModel.FirstNumber = 0;
                         return "Input must be number";
                     }
                     else
@@ -138,10 +151,10 @@ namespace CalcProgram.ViewModel
                 int result2;
                 if (propertyName == "txtInput2")
                 {
-                    objOperationCommand.Refresh();
+                   // objOperationCommand.Refresh();
                     if (!IsValidNumber(input2, out result2))
                     {
-                        objOperationModel.SecondNumber = 0;                       
+                        objOperationModel.SecondNumber = 0;
                         return "Input must be number";
                     }
                     else
@@ -166,15 +179,16 @@ namespace CalcProgram.ViewModel
         #endregion
     }
 
-    class OperationCommand : ICommand
+    public class OperationCommand : ICommand
     {
-        Action<object> whatToExecute;
+        Action whatToExecute;
         Func<bool> whenToExecute;
+        Action refresh;
 
-        public OperationCommand(Action<object> what, Func<bool> when)
+        public OperationCommand(Action what, Func<bool> when)
         {
             whatToExecute = what;
-            whenToExecute = when;
+            whenToExecute = when;           
         }
 
         public bool CanExecute(object parameter)
@@ -182,19 +196,17 @@ namespace CalcProgram.ViewModel
             return whenToExecute();
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove {
+                CommandManager.RequerySuggested -= value; 
+            }
+        }
 
         public void Execute(object parameter)
         {
-            whatToExecute(parameter);
-        }
-
-        public void Refresh()
-        {
-            if (CanExecuteChanged != null)
-            {
-                CanExecuteChanged(this, EventArgs.Empty);
-            }
+            whatToExecute();
         }
     }
 }
